@@ -21,6 +21,7 @@ import static org.openqa.selenium.By.partialLinkText;
 public class IssuesTests {
     private static final String REPOSITORY = "NadezhdaVarlamova/qa_guru_6";
     private static final String TITLE = "Hello";
+    private static final String TITLE2 = "Hi";
 
     @BeforeAll
     static void setUp() {        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
@@ -70,6 +71,30 @@ public class IssuesTests {
         step("Проверяем наличие Issue с заголовком " + TITLE, ()->{
             $(withText(TITLE)).shouldBe(visible); });
     }
+
+    @Test
+    @AllureId("8139")
+    @DisplayName("Проверяем наличие Issue с заголовком")
+    @Tags({@Tag("crit"), @Tag("web")})
+    @Owner("allure8")
+    @Feature("GitIssue")
+    public void testIssueNameFail() {
+        Allure.parameter("Репозиторий", REPOSITORY);
+        Allure.parameter("Заголовок Issue", TITLE2);
+        step("Открываем страницу", () -> {
+            open("https://github.com/");});
+        step("Поиск репозитория " + REPOSITORY, ()->{
+            $(".header-search-input").click();
+            $(".header-search-input").setValue(REPOSITORY).pressEnter(); });
+        step("Переходим в репозиторий " + REPOSITORY, ()->{
+            $(linkText(REPOSITORY)).click(); });
+        step("Открываем таб Issue", ()->{
+            $(partialLinkText("Issue")).click(); });
+        step("Проверяем наличие Issue с заголовком " + TITLE, ()->{
+            $(withText(TITLE)).shouldBe(visible); });
+    }
+
+
         @AfterEach
         void addAttachments() {
             Attach.screenshotAs("Last screenshot");
